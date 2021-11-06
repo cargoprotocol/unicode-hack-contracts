@@ -53,19 +53,29 @@ contract AggregatorVault is ERC20Permit, IRebalancerType, ReentrancyGuard {
         _mint(_to, liquidity);
     }
 
+    function withdraw(uint256 _liquidity, address _to) external returns (uint256 amount0, uint256 amount1) {
+        if (rebalancer == Rebalancer.VISOR) {
+            (amount0, amount1) = _withdrawFromVisor(_liquidity, _to, address(this));
+        }
+
+        _burn(msg.sender, _liquidity);
+        token0.safeTransfer(_to, amount0);
+        token1.safeTransfer(_to, amount1);
+    }
+
     function _depositToVisor(
-        uint256 deposit0,
-        uint256 deposit1,
-        address to
+        uint256 _deposit0,
+        uint256 _deposit1,
+        address _to
     ) internal returns (uint256 shares) {
-        shares = IVisorVault(vault).deposit(deposit0, deposit1, to);
+        shares = IVisorVault(vault).deposit(_deposit0, _deposit1, _to);
     }
 
     function _withdrawFromVisor(
-        uint256 shares,
-        address to,
-        address from
+        uint256 _shares,
+        address _to,
+        address _from
     ) internal returns (uint256 amount0, uint256 amount1) {
-        (amount0, amount1) = IVisorVault(vault).withdraw(shares, to, from);
+        (amount0, amount1) = IVisorVault(vault).withdraw(_shares, _to, _from);
     }
 }
