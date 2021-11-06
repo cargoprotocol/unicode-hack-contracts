@@ -3,8 +3,9 @@ pragma solidity ^0.8.4;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-import {IRebalancerType} from "./interfaces/IRebalancerType.sol";
 import {AggregatorVault} from "./AggregatorVault.sol";
+import {IRebalancerType} from "./interfaces/IRebalancerType.sol";
+import {NoDelegateCall} from "../utils/NoDelegateCall.sol";
 
 contract AggregatorVaultFactory is IRebalancerType, Ownable {
     event AggregatorVaultCreated(address aggregatorVault);
