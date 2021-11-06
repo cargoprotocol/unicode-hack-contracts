@@ -7,7 +7,7 @@ import "hardhat-deploy";
 import "solidity-coverage";
 
 import {constants} from "ethers";
-import {CHAIN_IDS} from "./tasks/utils";
+import {CHAIN_IDS} from "./utils";
 
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY || constants.HashZero.slice(2);
 const INFURA_KEY = process.env.INFURA_KEY || "";
