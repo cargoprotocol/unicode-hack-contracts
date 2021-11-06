@@ -1,0 +1,27 @@
+# Compiled binary
+build/
+
+# Dependencies
+node_modules/
+/package-lock.json
+/yarn.lock
+
+# Env
+.env
+
+# IDE addons
+.idea/
+.vscode/
+
+# Misc directories
+tmp/
+
+# Solidity Compiled binary
+/artifacts/
+cache/
+coverage/
+/deployments
+types/
+coverage.json
+typechain/
+solcInputs
