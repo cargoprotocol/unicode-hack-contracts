@@ -13,8 +13,8 @@
     "test": "hardhat test",
     "lint": "prettier --check \"**/*.{ts,js,sol}\"",
     "lint:fix": "prettier --write \"**/*.{ts,js,sol}\"",
+    "lint:fix:sol": "prettier --write \"contracts/**/*.sol\"",
     "lint:sol": "solhint 'contracts/**/*.sol' && prettier -c 'contracts/**/*.sol'",
-    "lint:sol:fix": "prettier --write \"contracts/**/*.sol\"",
     "postinstall": "husky install",
     "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain"
   },
