@@ -99,9 +99,7 @@ const main = async () => {
     console.log(`Current USDT: ${depositAmounts[i][1]}\n`);
     await weth.connect(users[i]).approve(aggregatorVault.address, depositAmounts[i][0]);
     await usdt.connect(users[i]).approve(aggregatorVault.address, depositAmounts[i][1]);
-    var liquidity = await aggregatorVault
-      .connect(users[i])
-      .deposit(ethers.BigNumber.from(0), depositAmounts[i][0], depositAmounts[i][1]);
+    const liquidity = await aggregatorVault.connect(users[i]).deposit(depositAmounts[i][0], depositAmounts[i][1]);
     users_liquidity.push(liquidity);
   }
   console.log("Simulate LP staking...\n");
