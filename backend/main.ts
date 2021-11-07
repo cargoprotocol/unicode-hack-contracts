@@ -2,9 +2,9 @@ import "dotenv/config";
 import {ethers} from "ethers";
 import hre from "hardhat";
 
-import {IAggregatorVault} from "../dist/contracts/typechain//IAggregatorVault";
-import {IAggregatorVaultFactory} from "../dist/contracts/typechain/IAggregatorVaultFactory";
-import {IERC20} from "../dist/contracts/typechain/IERC20";
+import {IAggregatorVault} from "../typechain//IAggregatorVault";
+import {IAggregatorVaultFactory} from "../typechain/IAggregatorVaultFactory";
+import {IERC20} from "../typechain/IERC20";
 import {RebalancerName, VisorVaults, Tokens} from "../utils";
 
 const delay = (ms: number) => {
