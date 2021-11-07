@@ -4,12 +4,10 @@ pragma solidity ^0.8.4;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 import {AggregatorVault} from "./AggregatorVault.sol";
-import {IRebalancerType} from "./interfaces/IRebalancerType.sol";
+import {IAggregatorVaultFactory} from "./interfaces/IAggregatorVaultFactory.sol";
 import {NoDelegateCall} from "../utils/NoDelegateCall.sol";
 
-contract AggregatorVaultFactory is IRebalancerType, Ownable {
-    event AggregatorVaultCreated(address aggregatorVault);
-
+contract AggregatorVaultFactory is IAggregatorVaultFactory, NoDelegateCall, Ownable {
     address[] public aggregatorVaults;
     mapping(address => address) public getAggregatorVault;
 
@@ -18,7 +16,7 @@ contract AggregatorVaultFactory is IRebalancerType, Ownable {
         address _vault,
         address _token0,
         address _token1
-    ) external onlyOwner returns (address aggregatorVault) {
+    ) external override onlyOwner returns (address aggregatorVault) {
         aggregatorVault = address(
             new AggregatorVault{salt: keccak256(abi.encode(_vault))}(_rebalancer, _vault, _token0, _token1)
         );
@@ -27,7 +25,7 @@ contract AggregatorVaultFactory is IRebalancerType, Ownable {
         emit AggregatorVaultCreated(aggregatorVault);
     }
 
-    function getAggregatorVaults() external view returns (address[] memory) {
+    function getAggregatorVaults() external view override returns (address[] memory) {
         return aggregatorVaults;
     }
 }
