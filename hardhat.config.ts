@@ -1,3 +1,4 @@
+import "@typechain/hardhat";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
@@ -52,5 +53,8 @@ module.exports = {
     alphaSort: true,
     runOnCompile: false,
     disambiguatePaths: false,
+  },
+  typechain: {
+    outDir: "typechain",
   },
 };
