@@ -31,15 +31,17 @@ contract AggregatorVault is IAggregatorVault, IRebalancerType, ERC20Permit, Reen
         token1 = IERC20(_token1);
     }
 
-    function deposit(uint256 _token0Amount, uint256 _token1Amount) external override returns (uint256 liquidity) {
+    function deposit(uint256 _token0Amount, uint256 _token1Amount) external override {
         if (_token0Amount > 0) token0.safeTransferFrom(msg.sender, address(this), _token0Amount);
         if (_token1Amount > 0) token1.safeTransferFrom(msg.sender, address(this), _token1Amount);
 
-        liquidity = _deposit(_token0Amount, _token1Amount, address(this));
+        uint256 liquidity = _deposit(_token0Amount, _token1Amount, address(this));
+        emit AggregatorVaultDeposit(liquidity);
     }
 
-    function withdraw(uint256 _liquidity, address _to) external override returns (uint256 amount0, uint256 amount1) {
-        (amount0, amount1) = _withdraw(_liquidity, _to, address(this));
+    function withdraw(uint256 _liquidity, address _to) external override {
+        (uint256 amount0, uint256 amount1) = _withdraw(_liquidity, _to, address(this));
+        emit AggregatorVaultWithdraw(amount0, amount1);
     }
 
     function _deposit(
