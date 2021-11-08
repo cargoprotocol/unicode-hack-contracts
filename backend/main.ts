@@ -1,9 +1,7 @@
 import "dotenv/config";
-import {ethers} from "ethers";
+import {ethers, BigNumber, BigNumberish} from "ethers";
 import hre from "hardhat";
 import {RebalancerName, VisorVaults, Tokens} from "../utils";
-
-const BigNumber = ethers.BigNumber;
 
 const delay = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -35,7 +33,7 @@ const getContracts = async (signer: ethers.Signer) => {
       Tokens.USDT
     );
     const receipt = await tx.wait();
-    const aggregatorVaultAddress = receipt.events?.[0]?.args?.rebalancer;
+    const aggregatorVaultAddress = receipt.events?.[0]?.args?.[0];
     const aggregatorVault = await hre.ethers.getContractAt("AggregatorVault", aggregatorVaultAddress);
     return {aggregatorVault, hhAggregatorVaultFactory};
   } else {
@@ -90,7 +88,7 @@ const main = async () => {
   console.log(`Best quote of ${quote} is from ${rebalancer}`);
   console.log(`Depositing user funds to ${rebalancer}...\n`);
   const users = accounts.slice(1, 3);
-  const users_liquidity = [] as BigUint64Array[];
+  const users_liquidity = [] as BigNumberish[];
   for (let i = 0; i < users.length; i++) {
     console.log(`User ${users[i].address}`);
     await users[i].sendTransaction({to: Tokens.WETH, value: depositAmounts[i][0]});
@@ -99,7 +97,9 @@ const main = async () => {
     console.log(`Current USDT: ${depositAmounts[i][1]}\n`);
     await weth.connect(users[i]).approve(aggregatorVault.address, depositAmounts[i][0]);
     await usdt.connect(users[i]).approve(aggregatorVault.address, depositAmounts[i][1]);
-    const liquidity = await aggregatorVault.connect(users[i]).deposit(depositAmounts[i][0], depositAmounts[i][1]);
+    const tx = await aggregatorVault.connect(users[i]).deposit(depositAmounts[i][0], depositAmounts[i][1]);
+    const receipt = await tx.wait();
+    const liquidity = receipt.events?.[0]?.args?.[0];
     users_liquidity.push(liquidity);
   }
   console.log("Simulate LP staking...\n");
@@ -112,10 +112,11 @@ const main = async () => {
     await users[i].sendTransaction({to: Tokens.USDT, value: depositAmounts[i][1]});
     await weth.connect(users[i]).approve(aggregatorVault.address, depositAmounts[i][0]);
     await usdt.connect(users[i]).approve(aggregatorVault.address, depositAmounts[i][1]);
-    const amounts = await aggregatorVault.connect(users[i]).withdraw(users_liquidity[i], users[i]);
+    const tx = await aggregatorVault.connect(users[i]).withdraw(users_liquidity[i], users[i].address);
+    const receipt = await tx.wait();
 
-    console.log(`Current ETH: ${amounts[0]}`);
-    console.log(`Current USDT: ${amounts[1]}`);
+    console.log(`Current ETH: ${receipt.events?.[0]?.args?.[0]}`);
+    console.log(`Current USDT: ${receipt.events?.[0]?.args?.[1]}`);
   }
 };
 
