@@ -9,7 +9,7 @@ const delay = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-const getProvider = (): ethers.providers.Provider => {
+const getProvider = () => {
   let provider: ethers.providers.Provider;
   if (process.env.PROVIDER === undefined) throw "PROVIDER is undefined";
 
