@@ -25,8 +25,9 @@ const getProvider = () => {
 const getContracts = async (signer: ethers.Signer) => {
   if (process.env.NODE_ENV == "development") {
     const AggregatorVaultFactory = await hre.ethers.getContractFactory("AggregatorVaultFactory", signer);
-    const hhAggregatorVaultFactory = await AggregatorVaultFactory.deploy();
-    const tx = await hhAggregatorVaultFactory.createAggregatorVault(
+    const aggregatorVaultFactory = await AggregatorVaultFactory.deploy();
+    await aggregatorVaultFactory.deployed();
+    const tx = await aggregatorVaultFactory.createAggregatorVault(
       RebalancerName.VISOR,
       VisorVaults.ETH_USDT,
       Tokens.WETH,
@@ -35,7 +36,7 @@ const getContracts = async (signer: ethers.Signer) => {
     const receipt = await tx.wait();
     const aggregatorVaultAddress = receipt.events?.[0]?.args?.[0];
     const aggregatorVault = await hre.ethers.getContractAt("AggregatorVault", aggregatorVaultAddress);
-    return {aggregatorVault, hhAggregatorVaultFactory};
+    return {aggregatorVault, aggregatorVaultFactory};
   } else {
     if (process.env.AGGREGATOR_VAULT_FACTORY_ADDRESS === undefined) throw "You must set contract address";
     const hhAggregatorVaultFactory = await hre.ethers.getContractAt(
