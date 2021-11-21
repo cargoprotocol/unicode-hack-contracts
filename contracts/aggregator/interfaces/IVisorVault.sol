@@ -9,7 +9,7 @@ interface IVisorVault {
         uint256,
         uint256,
         address
-    ) external returns (uint256); // shares
+    ) external returns (uint256);
 
     function withdraw(
         uint256,
